@@ -5,6 +5,27 @@ let createError = require('http-errors'),
     logger = require('morgan'),
     env = require('dotenv').load();
 
+let models = require('./models');
+
+// Check DB connection
+models.connexion.authenticate().then(()=>{
+
+    models.connexion.sync({force:true}).then(() => {
+
+        // Create initial data to work with
+        require('./config/mock_data')(models);
+
+        // To shutdown the promise warning
+        return null;
+    }).catch((err)=>{
+        throw new Error(err);// Raises an exception in the current code block and flow to next catch
+    });
+
+    return null; // To shutdown the promise warning
+}).catch(err => {
+    console.error(err); // Prints out the error
+    process.exit(1); // Exit with a 'failure'
+});
 let app = express();
 //app.set('view engine', 'pug');
 
