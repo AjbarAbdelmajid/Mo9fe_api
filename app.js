@@ -3,9 +3,16 @@ let createError = require('http-errors'),
     path = require('path'),
     cookieParser = require('cookie-parser'),
     logger = require('morgan'),
-    env = require('dotenv').load();
+    env = require('dotenv').load(),
+    bodyParser = require('body-parser'),
+    passport = require('passport'),
+    multer  = require('multer');// For uploading files
 
 let models = require('./models');
+
+// Load passport strategy
+require('./config/passport')(passport, models.user);
+
 
 // Check DB connection
 models.connexion.authenticate().then(()=>{
@@ -26,8 +33,17 @@ models.connexion.authenticate().then(()=>{
     console.error(err); // Prints out the error
     process.exit(1); // Exit with a 'failure'
 });
+
+
 let app = express();
 //app.set('view engine', 'pug');
+
+// For bodyParser
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Initialize Passport
+app.use(passport.initialize());
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,11 +51,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'jade');
+
 
 // The main page
 app.get('/', function(req, res) {
     res.send('Page under construction.');
 });
+
+let signup = require('./routes/authentication/signupRoute');
+
+// Routes Authentication
+app.use('/', signup);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
