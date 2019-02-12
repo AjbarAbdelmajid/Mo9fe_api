@@ -60,9 +60,12 @@ app.get('/', function(req, res) {
 });
 
 let signup = require('./routes/authentication/signupRoute');
+    signin = require('./routes/authentication/signinRoute');
 
-// Routes Authentication
+// Routes
 app.use('/', signup);
+app.use('/', signin);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
