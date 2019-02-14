@@ -59,12 +59,15 @@ app.get('/', function(req, res) {
     res.send('Page under construction.');
 });
 
-let signup = require('./routes/authentication/signupRoute');
-    signin = require('./routes/authentication/signinRoute');
+let signup = require('./routes/authentication/signupRoute'),
+    signin = require('./routes/authentication/signinRoute'),
+    user = require('./routes/users/userRouter');
 
 // Routes
-app.use('/', signup);
-app.use('/', signin);
+app.use('/api', signup);
+app.use('/api', signin);
+app.use('/api/users', passport.authenticate('jwt', {session: false}), user);
+
 
 
 // catch 404 and forward to error handler
