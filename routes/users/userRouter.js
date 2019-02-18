@@ -11,10 +11,9 @@ router.get('/list', usersController.list_users);
 router.get('/me', usersController.logged_user);
 
 // List User using ID
-router.get('/search/:id', usersController.list_user_by_id);
+router.get('/search/:user_id', usersController.list_user_by_id);
 
 // Delete User
-router.post('/delete/:id', usersController.delete_user);
-
+router.delete('/delete/:user_id', usersController.delete_user);
 
 module.exports = router;

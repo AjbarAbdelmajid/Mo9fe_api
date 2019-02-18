@@ -25,10 +25,10 @@ Export.announce_list = function (req, res) {
 
 Export.list_announce_by_id = function (req, res) {
 
-        if (req.params.id){
+        if (req.params.announce_id){
             announces.findOne({
                 where : {
-                    announce_id : req.params.id,
+                    announce_id : req.params.announce_id,
                     is_active : true
                 }
             }).then((the_announce)=>{
@@ -50,10 +50,10 @@ Export.delete_announce = function (req, res) {
     let token = getToken(req.headers);
 
     if(token){
-        if (req.params.id){
+        if (req.params.announce_id){
             announces.destroy({
                 where : {
-                    announce_id: req.params.id
+                    announce_id: req.params.announce_id
                 }
             }).then((deletedAnnounce)=>{
                 if (deletedAnnounce){

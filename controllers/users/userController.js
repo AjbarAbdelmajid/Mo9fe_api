@@ -20,7 +20,7 @@ Export.list_users = function (req, res) {
         });
 
     } else {
-        return res.status(403).send({success: false, msg: 'mjid Unauthorized.'});
+        return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }
 };
 
@@ -38,10 +38,10 @@ Export.list_user_by_id = function (req, res) {
     let token = getToken(req.headers);
 
     if (token  && req.user.is_admin ){
-        if (req.params.id){
+        if (req.params.user_id){
             User.findOne({
                 where : {
-                    user_id : req.params.id
+                    user_id : req.params.user_id
                 }
             }).then((user)=>{
                 if (user){
@@ -64,10 +64,10 @@ Export.delete_user = function (req, res) {
     let token = getToken(req.headers);
 
     if(token && req.user.is_admin){
-        if(req.params.id){
+        if(req.params.user_id){
             User.destroy({
                 where: {
-                    user_id : req.params.id
+                    user_id : req.params.user_id
                 }
             }).then((is_deleted)=>{
                 if (is_deleted){

@@ -3,6 +3,6 @@ let express = require('express'),
 
 let signupController = require('../../controllers/authentication/signupController');
 
-router.get('/signup', signupController.signup);
+router.post('/signup', signupController.signup);
 
 module.exports = router;
