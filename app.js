@@ -59,14 +59,19 @@ app.get('/', function(req, res) {
     res.send('Page under construction.');
 });
 
+// requiring needed routes
 let signup = require('./routes/authentication/signupRoute'),
     signin = require('./routes/authentication/signinRoute'),
-    user = require('./routes/users/userRouter');
+    user = require('./routes/users/userRouter'),
+    privet_announce  = require('./routes/announces/privet_routes'),
+    public_announce  = require('./routes/announces/public_routes');
 
-// Routes
+// using Routes
 app.use('/api', signup);
 app.use('/api', signin);
 app.use('/api/users', passport.authenticate('jwt', {session: false}), user);
+app.use('/api/announce_pri', passport.authenticate('jwt', {session: false}), privet_announce);
+app.use('/api/announce_pub', public_announce);
 
 
 
