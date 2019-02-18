@@ -86,6 +86,47 @@ Export.delete_user = function (req, res) {
     }
 };
 
+Export.update_user = function (req, res) {
+    let token = getToken(req.headers),
+        toFind = {};
+
+    if (token){
+        if (!req.body.user_name && !req.body.password){
+            res.json({success: false, msg: 'please pass in your new username or password'})
+        } else {
+            if (req.body.user_name && ! req.body.password){
+                toFind.user_name = req.body.user_name
+            }
+            else if(!req.body.user_name && req.body.password){
+                toFind.password = req.body.password
+            } else {
+                toFind.password = req.body.password;
+                toFind.user_name = req.body.user_name
+            }
+        }
+        manipulation(req, res, toFind)
+
+    } else {
+        res.status(403).send({success: false, msg: 'Unauthorized'})
+    }
+};
+
+function manipulation (req, res, toFind){
+    User.update(
+        toFind,
+        {
+            where: {user_id: req.user.user_id}
+        }
+    ).then((updated)=>{
+        if (updated){
+            res.json({success: true, msg: 'user successfully updated'})
+        } else {
+            res.json({success: false, msg: 'user is not found'})
+        }
+    }).catch((err)=>{
+        throw Error(err)
+    })
+}
 
 function getToken(headers) {
     if(headers && headers.authorization){

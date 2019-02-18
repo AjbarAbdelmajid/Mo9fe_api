@@ -16,4 +16,8 @@ router.get('/search/:user_id', usersController.list_user_by_id);
 // Delete User
 router.delete('/delete/:user_id', usersController.delete_user);
 
+//update info
+router.patch('/update/me', usersController.update_user);
+
+
 module.exports = router;
