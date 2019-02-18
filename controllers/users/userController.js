@@ -1,21 +1,15 @@
 const Export = module.exports = {};
-//list one user data
+
 
 let User = require('../../models').user;
 let profile = require('../../models').profile;
+
 
 Export.list_users = function (req, res) {
     let token = getToken(req.headers);
 
     if (token && req.user.is_admin) {
-        User.findAll(
-            {include: [{
-                model: profile,
-                where: {
-                    User_id : User.user_id
-                }
-            }]}
-        ).then((users) => {
+        User.findAll().then((users) => {
             if (users) {
             return res.json(users);
             } else {
@@ -40,14 +34,14 @@ Export.logged_user = function (req, res) {
     }
 };
 
-Export.list_user_by_user_name = function (req, res) {
+Export.list_user_by_id = function (req, res) {
     let token = getToken(req.headers);
 
     if (token  && req.user.is_admin ){
-        if (req.params.username){
+        if (req.params.id){
             User.findOne({
                 where : {
-                    user_name : req.params.username
+                    user_id : req.params.id
                 }
             }).then((user)=>{
                 if (user){
@@ -70,10 +64,10 @@ Export.delete_user = function (req, res) {
     let token = getToken(req.headers);
 
     if(token && req.user.is_admin){
-        if(req.params.username){
+        if(req.params.id){
             User.destroy({
                 where: {
-                    user_name : req.params.username
+                    user_id : req.params.id
                 }
             }).then((is_deleted)=>{
                 if (is_deleted){
@@ -91,6 +85,7 @@ Export.delete_user = function (req, res) {
         res.status(403).send({success: false, msg: 'Unauthorized'})
     }
 };
+
 
 function getToken(headers) {
     if(headers && headers.authorization){
