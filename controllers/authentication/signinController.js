@@ -22,11 +22,21 @@ function check(data, req, res){
         if(user){
             if(checkPassword(user.password, req.body.password)){
 
-                let payload = {user_id: user.user_id};
-                //create token
-                let token = jwt.sign(payload,SecretKey);
-                //send token
-                res.json({data:user, success: true, token: 'JWT ' + token})
+                //update last login
+                user.update({
+                    last_login: Date.now()
+                }).then(()=>{
+
+                    //create token
+                    let payload = {user_id: user.user_id},
+                        token = jwt.sign(payload,SecretKey);
+
+                    //send token
+                    res.json({data:user, success: true, token: 'JWT ' + token});
+                }).catch((err)=>{
+                    throw Error(err)
+                });
+
             }else {
                 //incorrect password
                 res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});

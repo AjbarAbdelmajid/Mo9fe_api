@@ -4,7 +4,7 @@ let express = require('express'),
 let signinController = require('../../controllers/authentication/signinController');
 
 //normal signin
-router.get('/signin', signinController.signin);
+router.patch('/signin', signinController.signin);
 
 module.exports = router;
 
