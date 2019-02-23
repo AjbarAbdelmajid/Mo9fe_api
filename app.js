@@ -63,6 +63,8 @@ app.get('/', function(req, res) {
 let signup = require('./routes/authentication/signupRoute'),
     signin = require('./routes/authentication/signinRoute'),
     user = require('./routes/users/userRouter'),
+    publicSort = require('./routes/sort/publicRoutes'),
+    privetSort = require('./routes/sort/privetRoutes'),
     privet_announce  = require('./routes/announces/privet_routes'),
     public_announce  = require('./routes/announces/public_routes');
 
@@ -70,10 +72,10 @@ let signup = require('./routes/authentication/signupRoute'),
 app.use('/api', signup);
 app.use('/api', signin);
 app.use('/api/users', passport.authenticate('jwt', {session: false}), user);
-app.use('/api/announce_pri', passport.authenticate('jwt', {session: false}), privet_announce);
-app.use('/api/announce_pub', public_announce);
-
-
+app.use('/api/announce/privet', passport.authenticate('jwt', {session: false}), privet_announce);
+app.use('/api/announce/public', public_announce);
+app.use('/api/sort/privet', passport.authenticate('jwt', {session: false}), privetSort);
+app.use('/api/sort/public', publicSort);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

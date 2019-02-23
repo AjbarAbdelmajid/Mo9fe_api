@@ -2,9 +2,8 @@ module.exports = (connexion, DataType) => {
 
     const city =  connexion.define('city', {
 
-        city_id: {
-            type: DataType.UUID,
-            defaultValue: DataType.UUIDV1,
+        code_postal: {
+            type: DataType.INTEGER,
             primaryKey: true,
         },
         city_name: {
