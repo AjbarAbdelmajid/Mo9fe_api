@@ -34,10 +34,10 @@ module.exports = (connexion, DataType)=>{
         },
         gender:{
             type:DataType.ENUM('Male', 'Female'),
-            allowNull:false,
         },
         is_searching:{
             type:DataType.BOOLEAN,
+            defaultValue:false
         },
     });
     return profile;

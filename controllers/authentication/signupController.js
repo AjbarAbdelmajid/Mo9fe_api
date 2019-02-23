@@ -1,7 +1,8 @@
 let bCrypt = require('bcrypt-nodejs'),
     models = require('../../models');
 
-User = models.user;
+let User = models.user,
+    Profile = models.profile;
 
 module.exports.signup = function (req, res) {
     if (!req.body.user_name || !req.body.password) {
@@ -18,8 +19,24 @@ module.exports.signup = function (req, res) {
                 User.create({
                     user_name : req.body.user_name,
                     password : hashPassWord(req.body.password)
-                }).then(() => {
-                    res.json({success: true, msg: 'Successful created new user.'});
+                }).then((user) => {
+                    if (user){
+
+                        Profile.create({
+                            first_name: '',
+                            last_name: '',
+                            profile_description: '',
+                            User_id: user.user_id
+
+                        }).then((addProfile)=>{
+                            res.json({success: true, msg: 'Successful created new user.',data: addProfile });
+                        }).catch((err)=>{
+                            throw Error(err)
+                        })
+                    } else {
+                        res.json({success: true, msg: 'Oops something went wrong.'});
+                    }
+
                 }).catch((err) => {
                     console.log(err);
                     return res.json({success: false, msg: 'Oops! Something went wrong.'});
