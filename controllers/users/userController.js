@@ -65,15 +65,27 @@ Export.delete_user = function (req, res) {
 
     if(token && req.user.is_admin){
         if(req.params.user_id){
-            User.destroy({
+            profile.destroy({
                 where: {
-                    user_id : req.params.user_id
+                    User_id : req.params.user_id
                 }
-            }).then((is_deleted)=>{
-                if (is_deleted){
-                    res.json({success: true, msg: 'User successfully deleted '})
+            }).then((profile_is_deleted)=>{
+                if (profile_is_deleted){
+                    User.destroy({
+                        where: {
+                            user_id : req.params.user_id
+                        }
+                    }).then((is_deleted)=>{
+                        if (is_deleted){
+                            res.json({success: true, msg: 'User successfully deleted'})
+                        } else {
+                            res.json({success: true, msq: 'Oops something went wrong'})
+                        }
+                    }).catch((err)=>{
+                        throw Error(err);
+                    })
                 } else {
-                    res.json({success: true, msq: 'user is not found '})
+                    res.json({success: true, msq: 'Oops something went wrong'})
                 }
             }).catch((err)=>{
                 throw Error(err);
