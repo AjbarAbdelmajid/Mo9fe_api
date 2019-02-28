@@ -24,4 +24,11 @@ module.exports = function (db) {
     db.profile.belongsToMany(db.city, {through:'profile_city', foreignKey:'profile_id'});
     db.city.belongsToMany(db.profile, {through:'profile_city', foreignKey:'City_id'});
 
+    //relationship between files And Announce and put announce_id in to files
+    db.announce.hasMany(db.files, {foreignKey:'announce_id'});
+    db.files.belongsTo(db.announce, {foreignKey:'announce_id'});
+
+//relationship between files And profile and put profile_id in to files
+    db.profile.hasMany(db.files, {foreignKey:'profile_id'});
+    db.files.belongsTo(db.profile, {foreignKey:'profile_id'});
 };
