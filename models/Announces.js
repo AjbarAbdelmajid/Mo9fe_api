@@ -10,7 +10,7 @@ module.exports = (connexion,DataType)=>{
             allowNull:false,
             notEmpty: true,
         },
-        is_active:{
+        is_searching:{
             type:DataType.BOOLEAN,
         },
         price:{

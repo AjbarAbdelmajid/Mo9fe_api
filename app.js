@@ -65,16 +65,16 @@ let signup = require('./routes/authentication/signupRoute'),
     user = require('./routes/users/userRouter'),
     publicSort = require('./routes/sort/publicRoutes'),
     privetSort = require('./routes/sort/privetRoutes'),
-    privet_announce  = require('./routes/announces/privet_routes'),
-    public_announce  = require('./routes/announces/public_routes');
+    announces  = require('./routes/announces/announcesRoutes'),
+    publish  = require('./routes/publish/publishRoutes');
 
 // using Routes
 app.use('/api', signup);
 app.use('/api', signin);
 app.use('/api/users', passport.authenticate('jwt', {session: false}), user);
-app.use('/api/announce/privet', passport.authenticate('jwt', {session: false}), privet_announce);
-app.use('/api/announce/public', public_announce);
+app.use('/api/announce', passport.authenticate('jwt', {session: false}), announces);
 app.use('/api/sort/privet', passport.authenticate('jwt', {session: false}), privetSort);
+app.use('/api/publish', publish);
 app.use('/api/sort/public', publicSort);
 
 // catch 404 and forward to error handler

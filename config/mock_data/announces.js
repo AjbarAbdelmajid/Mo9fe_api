@@ -47,7 +47,7 @@ module.exports.count = announceTitleList.length;
 module.exports.List = (counter)=>{
     return {
         announce_title: announceTitleList[counter],
-        is_active: isActiveList[counter],
+        is_searching: isActiveList[counter],
         price: priceList[counter],
         announce_description: announceDescriptionList[counter],
         keep_searching: keepSearchingList[counter],
