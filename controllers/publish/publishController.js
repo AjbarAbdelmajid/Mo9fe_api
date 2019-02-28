@@ -1,6 +1,7 @@
 const Export = module.exports = {};
 
-let announces = require('../../models').announce;
+let announces = require('../../models').announce,
+    profile = require('../../models').profile;
 
 
 Export.announce_list = function (req, res) {
@@ -24,6 +25,31 @@ Export.list_announce_by_id = function (req, res) {
     } else {
         return res.status(400).send({success: false , msg: 'bad announce id'})
     }
+};
+
+
+Export.profile_list = function (req, res) {
+
+        list_all(req, res, profile)
+};
+
+Export.list_profile_by_id = function (req, res) {
+    if (req.params.id_Profile){
+        let data = {};
+        data.toFind = {
+            where : {
+                id_Profile : req.params.id_Profile,
+                is_searching : true
+            }
+        };
+        data.model =profile;
+
+        list_by_id(req, res, data)
+    }else {
+        return res.status(400).send({success: false , msg: 'bad profile id'})
+
+    }
+
 };
 
 
