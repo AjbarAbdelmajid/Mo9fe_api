@@ -1,48 +1,35 @@
 const Export = module.exports = {};
+let models = require('../../models');
 
-let announces = require('../../models').announce;
+let announces = models.announce,
+    cities = models.city,
+    File = models.files,
+    categories = models.categories;
 
 
-Export.announce_list = function (req, res) {
+Export.logged_user_announces = function (req, res) {
+    let token = getToken(req.headers);
 
-    announces.findAll({
-        where: {
-            is_active : true
-        }
-    }).then((announce) => {
+    if(token){
+        announces.findAll({
+            where: {
+                user_id: req.user.user_id
+            }
+        }).then((announce) => {
 
-        if (announce){
-            return res.json(announce);
-        }
-        else {
-            return res.json({success: false, msg: 'Oops! Something went wrong.'});
-        }
-    }).catch((err) => {
-        throw new Error(err);
-    });
+            if (announce){
+                return res.json(announce);
+            }
+            else {
+                return res.json({success: false, msg: 'Oops! Something went wrong.'});
+            }
+        }).catch((err) => {
+            throw new Error(err);
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'})
+    }
 
-};
-
-Export.list_announce_by_id = function (req, res) {
-
-        if (req.params.announce_id){
-            announces.findOne({
-                where : {
-                    announce_id : req.params.announce_id,
-                    is_active : true
-                }
-            }).then((the_announce)=>{
-                if (the_announce){
-                    return res.json(the_announce);
-                } else {
-                    return res.status(400).send({success: false, msg:'Announce not found' })
-                }
-            }).catch((err)=>{
-                throw new Error(err);
-            })
-        } else {
-            return res.status(400).send({success: false , msg: 'bad announce id'})
-        }
 
 };
 
@@ -68,6 +55,8 @@ Export.delete_announce = function (req, res) {
         } else {
             return res.status(403).send({success: false, msg: 'Oops Something went wrong.'});
         }
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'})
     }
 };
 
