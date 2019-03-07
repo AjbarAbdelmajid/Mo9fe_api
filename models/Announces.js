@@ -12,6 +12,7 @@ module.exports = (connexion,DataType)=>{
         },
         is_searching:{
             type:DataType.BOOLEAN,
+            defaultValue:true,
         },
         price:{
             type: DataType.INTEGER,
@@ -21,11 +22,8 @@ module.exports = (connexion,DataType)=>{
             allowNull:false,
             notEmpty: true,
         },
-        rejoin_file:{
+        phone:{
             type:DataType.STRING,
-        },
-        deleted_at:{
-            type:DataType.DATE,
         },
     });
     return announce;
