@@ -9,6 +9,10 @@ module.exports = (connexion,DataType)=>{
             type:DataType.STRING,
             allowNull:false,
         },
+        name:{
+            type:DataType.STRING,
+            allowNull:false,
+        },
     });
     return files;
 };
