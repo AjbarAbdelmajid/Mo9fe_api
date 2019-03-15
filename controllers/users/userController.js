@@ -126,7 +126,6 @@ Export.update_user = function (req, res) {
 function manipulation (req, res, toFind){
     User.update(
         toFind,
-        {updatedAt: Date.now()},
         {
             where: {user_id: req.user.user_id}
         }
