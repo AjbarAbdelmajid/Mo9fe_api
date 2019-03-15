@@ -5,8 +5,7 @@ let createError = require('http-errors'),
     logger = require('morgan'),
     env = require('dotenv').load(),
     bodyParser = require('body-parser'),
-    passport = require('passport'),
-    multer  = require('multer');// For uploading files
+    passport = require('passport');
 
 let models = require('./models');
 
@@ -66,6 +65,7 @@ let signup = require('./routes/authentication/signupRoute'),
     publicSort = require('./routes/sort/publicRoutes'),
     privetSort = require('./routes/sort/privetRoutes'),
     announces  = require('./routes/announces/announcesRoutes'),
+    profile  = require('./routes/profile/profileRoutes'),
     publish  = require('./routes/publish/publishRoutes');
 
 // using Routes
@@ -73,6 +73,7 @@ app.use('/api', signup);
 app.use('/api', signin);
 app.use('/api/users', passport.authenticate('jwt', {session: false}), user);
 app.use('/api/announce', passport.authenticate('jwt', {session: false}), announces);
+app.use('/api/profile', passport.authenticate('jwt', {session: false}), profile);
 app.use('/api/sort/privet', passport.authenticate('jwt', {session: false}), privetSort);
 app.use('/api/publish', publish);
 app.use('/api/sort/public', publicSort);
