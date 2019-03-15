@@ -21,16 +21,13 @@ module.exports = (connexion, DataType)=>{
         experience_dur:{
             type: DataType.INTEGER,
         },
-        import_file:{
+        phone:{
             type:DataType.STRING,
         },
         profile_description:{
             type: DataType.TEXT,
             allowNull:false,
             notEmpty: true,
-        },
-        picture:{
-            type:DataType.STRING,
         },
         gender:{
             type:DataType.ENUM('Male', 'Female'),
