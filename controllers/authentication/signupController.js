@@ -28,8 +28,8 @@ module.exports.signup = function (req, res) {
                             profile_description: '',
                             User_id: user.user_id
 
-                        }).then((addProfile)=>{
-                            res.json({success: true, msg: 'Successful created new user.',data: addProfile });
+                        }).then(()=>{
+                            res.json({success: true, msg: 'Successful created new user.',data: user });
                         }).catch((err)=>{
                             throw Error(err)
                         })
