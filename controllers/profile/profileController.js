@@ -65,7 +65,8 @@ exports.update_profile = function (req, res) {
 
                                                //search if the image exist
                                                images.findOne({where:{
-                                                   name: image.originalname
+                                                   name: image.originalname,
+                                                   id_Profile: findIt.id_Profile
                                                }}).then((exist)=>{
 
                                                    //if the image does not exist
@@ -117,6 +118,38 @@ exports.update_profile = function (req, res) {
         return res.status(403).send({success: false, msg: 'Unauthorized'})
     }
 };
+
+exports.deactivate_profile = function (req, res) {
+    let token = getToken(req.headers);
+    if(token && req.user.is_admin){
+        if (req.params.user_id){
+
+            profile.findOne({
+                where:{ User_id: req.params.user_id}
+            }).then((find)=>{
+                if (find){
+                    find.update({is_searching: false,}).then((updated)=>{
+                        if (updated){
+
+                            res.json({success: true, msg:'Profile is deactivated'})
+                        } else {
+                            res.json({success: false, msg:'Profile is not deactivated'})
+                        }
+                    }).catch((err)=>{
+                        throw Error(err)
+                    })
+                } else {
+                    console.log('didn\'t find it')
+                }
+            }).catch((err)=>{
+                throw Error(err)
+            })
+
+        }else {res.json({success: false, msg:'user is not exist'})}
+
+    } else {res.json({success: false, msg:'Unauthorized'})}
+};
+
 
 getToken = function (headers) {
     if (headers.authorization) {
