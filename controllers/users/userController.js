@@ -160,6 +160,43 @@ Export.get_user_announces = function (req, res) {
     }
 };
 
+Export.get_user_profile = function (req, res) {
+    let token = getToken(req.headers);
+
+    if (token  && req.user.is_admin ){
+        if (req.params.user_id){
+
+            //search for the profile
+            profile.findOne({
+                where : {User_id : req.params.user_id}
+            }).then((exist)=>{
+
+                //if the profile is enabled search for profile's images
+                if (exist.is_searching === true){
+                    images.findAll({
+                        where : {
+                            id_Profile : exist.id_Profile
+                        }
+                    }).then((profile_images)=>{
+                        return res.json({success: true, data: exist, images: profile_images});
+                    }).catch((err)=>{
+                        throw new Error(err);
+                    });
+                } else {
+                    return res.json({success: false, msg:'profile is deactivated'})
+                }
+            }).catch((err)=>{
+                throw new Error(err);
+            })
+        } else {
+            return res.status(400).send({success: false , msg: 'bad user id'})
+        }
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'})
+    }
+};
+
+
 function manipulation (req, res, toFind){
     User.update(
         toFind,

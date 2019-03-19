@@ -16,6 +16,9 @@ router.get('/search/:user_id', usersController.list_user_by_id);
 // List User announces
 router.get('/announce/:user_id', usersController.get_user_announces);
 
+// List User profile
+router.get('/profile/:user_id', usersController.get_user_profile);
+
 //user delete his account
 router.delete('/delete/me/', usersController.user_delete_his_account);
 
