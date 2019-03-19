@@ -138,6 +138,27 @@ Export.user_delete_his_account = function (req, res){
     }
 };
 
+Export.get_user_announces = function (req, res) {
+    let token = getToken(req.headers);
+
+    if (token  && req.user.is_admin ){
+        if (req.params.user_id){
+
+            announces.findAll({
+                where : {user_id : req.params.user_id},
+                include: [{ model: images }]
+            }).then((exist)=>{
+                return res.json({success: true, data: exist});
+            }).catch((err)=>{
+                throw new Error(err);
+            })
+        } else {
+            return res.status(400).send({success: false , msg: 'bad user id'})
+        }
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'})
+    }
+};
 
 function manipulation (req, res, toFind){
     User.update(
