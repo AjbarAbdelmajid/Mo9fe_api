@@ -11,7 +11,7 @@ Export.list_users = function (req, res) {
     if (token && req.user.is_admin) {
         User.findAll().then((users) => {
             if (users) {
-            return res.json(users);
+                return res.json(users);
             } else {
                 return res.json({success: false, msg: 'Oops! Something went wrong.'});
             }
@@ -122,6 +122,22 @@ Export.update_user = function (req, res) {
         res.status(403).send({success: false, msg: 'Unauthorized'})
     }
 };
+
+Export.user_delete_his_account = function (req, res){
+    let token = getToken(req.headers);
+    if (token){
+        User.destroy({
+            where: {user_id: req.user.user_id}
+        }).then((deleted)=>{
+            if (deleted){
+                res.json({success: true, msg: 'account is deleted'})
+            } else{res.json({success: false, msg: 'account is not deleted'})}
+        }).catch((err)=>{
+            throw Error(err)
+        })
+    }
+};
+
 
 function manipulation (req, res, toFind){
     User.update(
