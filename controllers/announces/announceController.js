@@ -4,6 +4,7 @@ let announces = models.announce,
     cities = models.city,
     images = models.files,
     categories = models.categories;
+let deleteImages = require('../files/filesController').deleteImages;
 
 
 Export.logged_user_announces = function (req, res) {
@@ -40,6 +41,9 @@ Export.delete_announce = function (req, res) {
             announces.destroy({
                 where : {
                     announce_id: req.params.announce_id
+                },
+                hooks: {
+                    beforeDestroy:  deleteImages({'announce_id': req.params.announce_id})
                 }
             }).then((deletedAnnounce)=>{
                 if (deletedAnnounce){
@@ -112,6 +116,7 @@ Export.create_announce = function (req, res) {
                                     req.files.forEach((image)=>{
                                         images.create({
                                             file_path: image.path,
+                                            name: image.originalname,
                                             announce_id: created.announce_id
                                         }).then().catch((err)=>{
                                             throw Error(err)
