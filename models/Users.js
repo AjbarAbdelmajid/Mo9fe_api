@@ -16,7 +16,8 @@ module.exports = (connexion, DataType)=>{
             notEmpty: true,
         },
         is_admin:{
-            type: DataType.STRING,
+            type: DataType.BOOLEAN,
+            defaultValue: false
         },
         last_login:{
             type: DataType.DATE,

@@ -30,5 +30,8 @@ module.exports = function (db) {
 
 //relationship between files And profile and put profile_id in to files
     db.profile.hasMany(db.files, {foreignKey:'id_Profile'});
-    db.files.belongsTo(db.profile, {foreignKey:'iP_profile'});
+    db.files.belongsTo(db.profile, {foreignKey:'id_Profile'});
+
+    db.user.hasOne(db.files, {foreignKey:'user_id'});
+    db.files.belongsTo(db.user, {foreignKey:'user_id'});
 };
