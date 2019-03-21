@@ -3,7 +3,9 @@ const Export = module.exports = {};
 
 let User = require('../../models').user;
 let profile = require('../../models').profile;
-
+let images = require('../../models').files;
+let announces = require('../../models').announce;
+let deleteImages = require('../files/filesController').deleteImages;
 
 Export.list_users = function (req, res) {
     let token = getToken(req.headers);
@@ -65,27 +67,68 @@ Export.delete_user = function (req, res) {
 
     if(token && req.user.is_admin){
         if(req.params.user_id){
+
+            //search for the user profile
+            profile.findOne({
+                where: {User_id : req.params.user_id}
+            }).then((find_it)=>{
+                if(find_it){
+
+                    // delete the profile images
+                    deleteImages({'id_Profile': find_it.id_Profile})
+                }else{console.log('there is no profile')}
+            });
+
+            // then delete the profile
             profile.destroy({
-                where: {
-                    User_id : req.params.user_id
-                }
+                where: {User_id : req.params.user_id}
             }).then((profile_is_deleted)=>{
                 if (profile_is_deleted){
-                    User.destroy({
-                        where: {
-                            user_id : req.params.user_id
-                        }
-                    }).then((is_deleted)=>{
-                        if (is_deleted){
-                            res.json({success: true, msg: 'User successfully deleted'})
-                        } else {
-                            res.json({success: true, msq: 'Oops something went wrong'})
-                        }
+
+                    // find all user announces
+                    announces.findAll({
+                        where: {user_id : req.params.user_id}
+                    }).then((find_it)=>{
+                        if(find_it) {
+                            find_it.filter((element)=>{
+                                return deleteImages({'announce_id': element.announce_id});
+                            })
+                        }else{console.log('there is no announces')}
+
+                        //waite intel the images are deleted
+                        setTimeout(()=>{
+                            //delete the announces
+                            announces.destroy({
+                                where: {user_id : req.params.user_id}
+                            }).then((destroyed) => {
+                                if (destroyed){
+                                    console.log('announces are destroyed')
+                                }else{
+                                    console.log('announce are not destroyed')
+                                }
+                                //delete the user
+                                User.destroy({
+                                    where: {
+                                        user_id: req.params.user_id
+                                    }
+                                }).then((is_deleted) => {
+                                    if (is_deleted) {
+                                        res.json({success: true, msg: 'User successfully deleted'})
+                                    } else {
+                                        res.json({success: false, msg: 'User is not deleted'})
+                                    }
+                                }).catch((err) => {
+                                    throw Error(err);
+                                });
+                            }).catch((err) => {
+                                throw Error(err);
+                            });
+                        }, 5000);
                     }).catch((err)=>{
                         throw Error(err);
-                    })
+                    });
                 } else {
-                    res.json({success: true, msq: 'Oops something went wrong'})
+                    res.json({success: false, msg: 'Oops something went wrong'})
                 }
             }).catch((err)=>{
                 throw Error(err);
