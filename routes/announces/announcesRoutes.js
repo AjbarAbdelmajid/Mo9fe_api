@@ -9,5 +9,7 @@ router.post('/create',upload.array('upload_img', 3), announceController.create_a
 
 router.get('/list/my/announces', announceController.logged_user_announces);
 
+router.patch('/update/:announce_id',upload.array('upload_img', 3), announceController.update_announce);
+
 
 module.exports = router;
