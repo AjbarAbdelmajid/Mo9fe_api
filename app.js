@@ -64,6 +64,7 @@ let signup = require('./routes/authentication/signupRoute'),
     user = require('./routes/users/userRouter'),
     publicSort = require('./routes/sort/publicRoutes'),
     privetSort = require('./routes/sort/privetRoutes'),
+    images = require('./routes/files/filesRoutes'),
     announces  = require('./routes/announces/announcesRoutes'),
     profile  = require('./routes/profile/profileRoutes'),
     publish  = require('./routes/publish/publishRoutes');
@@ -75,6 +76,7 @@ app.use('/api/users', passport.authenticate('jwt', {session: false}), user);
 app.use('/api/announce', passport.authenticate('jwt', {session: false}), announces);
 app.use('/api/profile', passport.authenticate('jwt', {session: false}), profile);
 app.use('/api/sort/privet', passport.authenticate('jwt', {session: false}), privetSort);
+app.use('/api/images', passport.authenticate('jwt', {session: false}), images);
 app.use('/api/publish', publish);
 app.use('/api/sort/public', publicSort);
 
