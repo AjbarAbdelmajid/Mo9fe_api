@@ -5,6 +5,7 @@ let createError = require('http-errors'),
     logger = require('morgan'),
     env = require('dotenv').load(),
     bodyParser = require('body-parser'),
+    cors = require('cors'),
     passport = require('passport');
 
 let models = require('./models');
@@ -40,6 +41,9 @@ let app = express();
 // For bodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Enable all cors Requests <<just while working on React, i will change it later>>
+app.use(cors());
 
 // Initialize Passport
 app.use(passport.initialize());
