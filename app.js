@@ -80,6 +80,9 @@ app.use('/api/images', passport.authenticate('jwt', {session: false}), images);
 app.use('/api/publish', publish);
 app.use('/api/sort/public', publicSort);
 
+//download files
+app.use('/api/download', express.static('upload'));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
