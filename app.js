@@ -85,7 +85,7 @@ app.use('/api/publish', publish);
 app.use('/api/sort/public', publicSort);
 
 //download files
-app.use('/api/download', express.static('upload'));
+app.use('/upload', express.static('upload'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
