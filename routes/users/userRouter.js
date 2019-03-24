@@ -2,7 +2,7 @@ let express = require('express'),
     router = express.Router();
 
 let usersController = require('./../../controllers/users/userController.js');
-
+let upload = require('../../config/multer').upload;
 
 // List All Users
 router.get('/list', usersController.list_users);
@@ -20,13 +20,13 @@ router.get('/announce/:user_id', usersController.get_user_announces);
 router.get('/profile/:user_id', usersController.get_user_profile);
 
 //user delete his account
-router.delete('/delete/me/', usersController.user_delete_his_account);
+router.delete('/delete/me', usersController.user_delete_his_account);
 
 // Delete User
 router.delete('/delete/:user_id', usersController.delete_user);
 
 //update info
-router.patch('/update/me', usersController.update_user);
+router.patch('/update/me',upload.single('user_image'), usersController.update_user);
 
 
 module.exports = router;

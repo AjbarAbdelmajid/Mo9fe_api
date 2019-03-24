@@ -11,7 +11,9 @@ Export.list_users = function (req, res) {
     let token = getToken(req.headers);
 
     if (token && req.user.is_admin) {
-        User.findAll().then((users) => {
+        User.findAll({
+            include: [{all: true}]
+        }).then((users) => {
             if (users) {
                 return res.json(users);
             } else {
@@ -110,6 +112,9 @@ Export.delete_user = function (req, res) {
                                 User.destroy({
                                     where: {
                                         user_id: req.params.user_id
+                                    },
+                                    hooks: {
+                                        beforeDestroy: deleteImages({user_id: req.params.user_id})
                                     }
                                 }).then((is_deleted) => {
                                     if (is_deleted) {
@@ -123,7 +128,7 @@ Export.delete_user = function (req, res) {
                             }).catch((err) => {
                                 throw Error(err);
                             });
-                        }, 5000);
+                        }, 4000);
                     }).catch((err)=>{
                         throw Error(err);
                     });
@@ -143,23 +148,43 @@ Export.delete_user = function (req, res) {
 
 Export.update_user = function (req, res) {
     let token = getToken(req.headers),
-        toFind = {};
+        toUpdate = {};
 
     if (token){
         if (!req.body.user_name && !req.body.password){
             res.json({success: false, msg: 'please pass in your new username or password'})
         } else {
-            if (req.body.user_name && ! req.body.password){
-                toFind.user_name = req.body.user_name
+            if (req.body.user_name ){
+                toUpdate.user_name = req.body.user_name
             }
-            else if(!req.body.user_name && req.body.password){
-                toFind.password = req.body.password
-            } else {
-                toFind.password = req.body.password;
-                toFind.user_name = req.body.user_name
+            if(req.body.password){
+                toUpdate.password = req.body.password
             }
+            if(req.file){
+                //delete the old image
+                if(deleteImages({'user_id': req.user.user_id})){
+
+                    //create the new image
+                    images.create({
+                        file_path: req.file.path,
+                        name: req.file.originalname,
+                        user_id: req.user.user_id
+
+                        // if the image is created
+                    }).then((created)=>{
+                        console.log(created);
+
+                        //if something went wrong
+                    }).catch((err)=>{
+                        throw Error(err)
+                    })
+                } else {
+                    console.log('the old image is not deleted')
+                }
+
+            }
+            manipulation(req, res, toUpdate)
         }
-        manipulation(req, res, toFind)
 
     } else {
         res.status(403).send({success: false, msg: 'Unauthorized'})
@@ -170,7 +195,12 @@ Export.user_delete_his_account = function (req, res){
     let token = getToken(req.headers);
     if (token){
         User.destroy({
-            where: {user_id: req.user.user_id}
+            where: {user_id: req.user.user_id},
+
+            //delete user images
+            hooks: {
+                beforeDestroy: deleteImages({user_id: req.user.user_id})
+            }
         }).then((deleted)=>{
             if (deleted){
                 res.json({success: true, msg: 'account is deleted'})
@@ -240,9 +270,10 @@ Export.get_user_profile = function (req, res) {
 };
 
 
-function manipulation (req, res, toFind){
+function manipulation (req, res, toUpdate){
+    //check if the new user_name doesn't exist
     User.update(
-        toFind,
+        toUpdate,
         {
             where: {user_id: req.user.user_id}
         }

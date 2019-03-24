@@ -50,8 +50,12 @@ exports.deleteImages = function (whereToFind) {
                 //delete the image from data base
                 image.destroy().then((destroyed)=>{
                     if (destroyed){
-                        return console.log('image is destroyed')
-                    } else {return console.log('image is not destroyed')}
+                        console.log('image is destroyed');
+                        return true
+                    } else {
+                        console.log('image is not destroyed');
+                        return false
+                    }
                 }).catch((err)=>{throw Error(err)})
             })
 
