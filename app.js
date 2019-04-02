@@ -6,7 +6,7 @@ let createError = require('http-errors'),
     env = require('dotenv').load();
 
 let app = express();
-//app.set('view engine', 'pug');
+//app.set('view engine', 'pug'); Test
 
 app.use(logger('dev'));
 app.use(express.json());
