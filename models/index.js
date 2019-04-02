@@ -23,7 +23,7 @@ model_files.filter((file) => {
 db.connexion = connexion;
 db.DataType = Sequelize;
 
-require('./Relationships')(db);
+require('./relationShips')(db);
 
 module.exports = db;
 
