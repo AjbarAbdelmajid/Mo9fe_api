@@ -1,4 +1,5 @@
 let bCrypt = require('bcrypt-nodejs'),
+    jwt = require('jsonwebtoken'),
     models = require('../../models');
 
 let User = models.user,
@@ -23,6 +24,7 @@ module.exports.signup = function (req, res) {
                 }).then((user) => {
                     if (user){
 
+                        //initiate user profile
                         Profile.create({
                             first_name: '',
                             last_name: '',
@@ -32,6 +34,7 @@ module.exports.signup = function (req, res) {
                         }).then(()=>{
 
                             // create user image
+                            if (req.file){
                             images.create({
                                 file_path: req.file.path,
                                 name: req.file.originalname,
@@ -40,9 +43,14 @@ module.exports.signup = function (req, res) {
                                 console.log(created);
                             }).catch((err)=>{
                                 throw Error(err)
-                            })
+                            })}
                         }).then(()=>{
-                            res.json({success: true, msg: 'Successful created new user.',data: user });
+                            //create token
+                            let payload = {user_id: user.user_id},
+                                token = jwt.sign(payload, process.env.SECRET);
+
+                            //send token
+                            res.json({success: true, msg: 'Successful created new user.',data: user, token: 'JWT ' + token});
                         }).catch((err)=>{
                             throw Error(err)
                         })
