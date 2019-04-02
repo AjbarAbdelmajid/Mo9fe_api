@@ -1,4 +1,4 @@
 .idea
 node_modules
-test
-README.md
+.env
+testing
