@@ -10,6 +10,11 @@ module.exports = (connexion, DataType)=>{
             allowNull:false,
             notEmpty: true,
         },
+        profile_title:{
+            type: DataType.STRING,
+            allowNull:false,
+            notEmpty: true,
+        },
         last_name:{
             type: DataType.STRING,
             allowNull:false,

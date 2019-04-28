@@ -5,6 +5,21 @@ let firstNameList = [
         'Hafid',
         'fares',
     ],
+    profileTitleList = [
+        'sbagh gha khdmena',
+        'hdad hanya li kan',
+        'njatr li kan',
+        'smsar baghi ikhdam',
+        'dras baghi ikhdam',
+    ],
+    isSearchingList = [
+        true,
+        true,
+        true,
+        true,
+        true,
+    ]
+    ,
     lastNameList = [
         'saidi',
         'sousi',
@@ -60,6 +75,7 @@ module.exports.count = firstNameList.length;
 module.exports.List = (counter)=>{
     return {
         first_name: firstNameList[counter],
+        profile_title: profileTitleList[counter],
         last_name: lastNameList[counter],
         age: ageList[counter],
         experience_dur: experienceDurationList[counter],
@@ -67,5 +83,6 @@ module.exports.List = (counter)=>{
         profile_description: profileDescriptionList[counter],
         picture: picturesList[counter],
         gender : genderList[counter],
+        is_searching: isSearchingList[counter]
     }
 };

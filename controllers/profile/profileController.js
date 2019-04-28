@@ -19,6 +19,7 @@ exports.update_profile = function (req, res) {
             'phone',
             'categories_id',
             'code_postal',
+            'profile_title'
         ],
         err_msg = '';
 

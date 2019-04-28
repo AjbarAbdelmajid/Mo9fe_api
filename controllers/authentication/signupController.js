@@ -29,7 +29,8 @@ module.exports.signup = function (req, res) {
                             first_name: '',
                             last_name: '',
                             profile_description: '',
-                            User_id: user.user_id
+                            User_id: user.user_id,
+                            profile_title: '',
 
                         }).then(()=>{
 
