@@ -15,6 +15,9 @@ module.exports = (connexion, DataType)=>{
             allowNull:false,
             notEmpty: true,
         },
+        picture:{
+            type: DataType.STRING,
+        },
         is_admin:{
             type: DataType.BOOLEAN,
             defaultValue: false
