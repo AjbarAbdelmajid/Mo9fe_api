@@ -63,7 +63,7 @@ Export.list_profile_by_id = function (req, res) {
 
 };
 Export.list_profile_by_category = function (req, res) {
-    for_categories(res, res, profile)
+    for_categories(req, res, profile)
 };
 Export.list_profile_by_city = function (req, res) {
     for_city(req, res, profile)

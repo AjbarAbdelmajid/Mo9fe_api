@@ -3,8 +3,7 @@ let bCrypt = require('bcrypt-nodejs'),
     models = require('../../models');
 
 let User = models.user,
-    Profile = models.profile,
-    images = models.files;
+    Profile = models.profile;
 
 module.exports.signup = function (req, res) {
     if (!req.body.user_name || !req.body.password) {
@@ -18,9 +17,16 @@ module.exports.signup = function (req, res) {
             if(ifOldUser) {
                 res.json({success: ifOldUser, msg: "user already exist"});
             } else {
+
+                //add the picture path  to the user info
+                let pictureInfo = null;
+                if (req.file){
+                    pictureInfo = req.file.path
+                }
                 User.create({
                     user_name : req.body.user_name,
-                    password : hashPassWord(req.body.password)
+                    password : hashPassWord(req.body.password),
+                    picture: pictureInfo,
                 }).then((user) => {
                     if (user){
 
@@ -34,24 +40,12 @@ module.exports.signup = function (req, res) {
 
                         }).then(()=>{
 
-                            // create user image
-                            if (req.file){
-                            images.create({
-                                file_path: req.file.path,
-                                name: req.file.originalname,
-                                user_id: user.user_id
-                            }).then((created)=>{
-                                console.log(created);
-                            }).catch((err)=>{
-                                throw Error(err)
-                            })}
-                        }).then(()=>{
                             //create token
                             let payload = {user_id: user.user_id},
                                 token = jwt.sign(payload, process.env.SECRET);
 
                             //send token
-                            res.json({success: true, msg: 'Successful created new user.',data: user, token: 'JWT ' + token});
+                            res.json({success: true, msg: 'Successful created new user. ', data: user, token: 'JWT ' + token});
                         }).catch((err)=>{
                             throw Error(err)
                         })
