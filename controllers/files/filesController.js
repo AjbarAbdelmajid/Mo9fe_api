@@ -1,6 +1,7 @@
 const fs = require('fs');
 const models = require('../../models');
 const images = models.files;
+const users = models.user;
 
 
 
@@ -64,6 +65,33 @@ exports.deleteImages = function (whereToFind) {
     }).catch((err)=>{
         throw Error(err)
     })
+};
+
+exports.deleteByPath = function (userId) {
+    users.findByPk(userId).then(user => {
+
+        //delete the image from the server's folder
+        try {
+            fs.unlinkSync(user.picture)
+        } catch (err) {
+            return console.error(err)
+        }
+    }).catch((err)=>{
+        return console.error(err)
+    });
+
+};
+
+exports.getImages = (req, res)=>{
+
+        images.findAll().then((exist)=>{
+            if (exist.length !== 0){
+                res.json({success: true, data: exist})
+            } else {
+                res.json({success: false, msg:'no one has an image'})
+            }
+        }).catch((err)=>{throw Error(err)})
+
 };
 
 function getToken(headers) {
