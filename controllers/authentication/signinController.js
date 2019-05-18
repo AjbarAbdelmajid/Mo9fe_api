@@ -39,11 +39,11 @@ function check(data, req, res){
 
             }else {
                 //incorrect password
-                res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+                res.json({success: false, msg: 'Authentication failed. Wrong password.'});
             }
         } else {
             //incorrect account
-            res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
+            res.json({success: false, msg: 'Authentication failed. User not found.'});
         }
     })
 

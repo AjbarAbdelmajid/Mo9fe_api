@@ -12,9 +12,7 @@ Export.list_users = function (req, res) {
     let token = getToken(req.headers);
 
     if (token && req.user.is_admin) {
-        User.findAll({
-            include: [{all: true}]
-        }).then((users) => {
+        User.findAll().then((users) => {
             if (users) {
                 return res.json(users);
             } else {
