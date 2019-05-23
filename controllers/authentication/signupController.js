@@ -1,5 +1,6 @@
 let bCrypt = require('bcrypt-nodejs'),
     jwt = require('jsonwebtoken'),
+     fs = require('fs'),
     models = require('../../models');
 
 let User = models.user,
@@ -7,6 +8,15 @@ let User = models.user,
 
 module.exports.signup = function (req, res) {
     if (!req.body.user_name || !req.body.password) {
+
+        // delete the uploaded image
+        if (req.file){
+            try {
+                fs.unlinkSync(req.file.path)
+            } catch (err) {
+                return console.error(err)
+            }
+        }
         res.json({success: false, msg: 'Please pass username and password.'});
     } else{
         User.findOne({
@@ -15,7 +25,14 @@ module.exports.signup = function (req, res) {
             }
         }).then((ifOldUser) => {
             if(ifOldUser) {
-                res.json({success: ifOldUser, msg: "user already exist"});
+                if (req.file){
+                    try {
+                        fs.unlinkSync(req.file.path)
+                    } catch (err) {
+                        return console.error(err)
+                    }
+                }
+                res.json({success: false, msg: "user already exist"});
             } else {
 
                 //add the picture path  to the user info
