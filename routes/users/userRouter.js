@@ -20,7 +20,7 @@ router.get('/announce/:user_id', usersController.get_user_announces);
 router.get('/profile/:user_id', usersController.get_user_profile);
 
 //user delete his account
-router.delete('/delete/me', usersController.user_delete_his_account);
+router.delete('/delete/me/:password', usersController.user_delete_his_account);
 
 // Delete User
 router.delete('/delete/:user_id', usersController.delete_user);

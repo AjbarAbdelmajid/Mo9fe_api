@@ -1,5 +1,5 @@
-const Export = module.exports = {};
-
+const Export = module.exports = {},
+bCrypt = require('bcrypt-nodejs');
 
 let User = require('../../models').user;
 let profile = require('../../models').profile;
@@ -107,7 +107,12 @@ Export.update_user = function (req, res) {
 Export.user_delete_his_account = function (req, res){
     let token = getToken(req.headers);
     if (token){
-        deleteAccount(req, res, req.user.user_id)
+        // verify if the knows the account password
+        if (checkPassword(req.user.password, req.params.password)){
+            deleteAccount(req, res, req.user.user_id);
+        } else {
+            res.json({success: false, msg: 'wrong password'})
+        }
     }
 };
 
@@ -175,10 +180,14 @@ function deleteAccount(req, res, user_id ){
     // delete profile images
     let deleteProfile = profile.findOne({where: {User_id : user_id}}).then((find_it)=>{
         if(find_it){
+
             // delete the profile images
             deleteImages({'id_Profile': find_it.id_Profile})
-        }else{console.log('there is no profile')}
+        }else{
+            console.log('there is no profile')
+        }
     }).then(()=>{
+
         // delete profile
         profile.destroy({where: {User_id : user_id}})
             .then().catch(err => {throw Error(err)});
@@ -188,23 +197,34 @@ function deleteAccount(req, res, user_id ){
     let deleteAnnounce = announces.findAll({where: {user_id : user_id}}).then((find_it)=>{
         if(find_it) {find_it.filter(element => deleteImages({'announce_id': element.announce_id}))}
         else{console.log('there is no announces')}}).then(()=>{
+
         // delete the announces
         announces.destroy({where: {user_id : user_id}})
             .then().catch(err => {throw Error(err)});
     });
 
+    // wait for the user profile and announces to be deleted then delete the user
     Promise.all([deleteProfile, deleteAnnounce]).then(()=>{
 
         // delete the user
         User.destroy({where: {user_id: user_id}, hooks:{beforeDestroy: deleteByPath(user_id)}})
             .then((is_deleted) => {
-                if (is_deleted) {return res.json({success: true, msg: 'User successfully deleted'})}
-                else {return res.json({success: false, msg: 'User is not deleted'})}
+                if (is_deleted) {
+                    return res.json({success: true, msg: 'User successfully deleted'})
+                }
+                else {
+                    return res.json({success: false, msg: 'User is not deleted'})
+                }
             }).catch((err) => {
             throw Error(err);
         });
     });
 
+}
+
+//verify password
+function checkPassword(origin, toVerify){
+    return bCrypt.compareSync(toVerify, origin)
 }
 
 function manipulation (req, res, toUpdate){
