@@ -174,6 +174,30 @@ Export.get_user_profile = function (req, res) {
     }
 };
 
+Export.get_connected_user_profile = function (req, res) {
+    let token = getToken(req.headers);
+
+    if (token){
+        profile.findOne({
+            where : {
+                User_id : req.user.user_id,
+            }
+        }).then((exist)=>{
+            if (exist){
+                return res.json({success: true, data: exist });
+            } else {
+                return res.json({success: false, msg:' not found' })
+            }
+        }).catch((err)=>{
+            throw new Error(err);
+        })
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'})
+    }
+
+
+};
+
 
 function deleteAccount(req, res, user_id ){
 

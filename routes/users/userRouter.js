@@ -28,5 +28,8 @@ router.delete('/delete/:user_id', usersController.delete_user);
 //update info
 router.patch('/update/me',upload.single('user_image'), usersController.update_user);
 
+router.get('/getUserProfile', usersController.get_connected_user_profile);
+
+
 
 module.exports = router;

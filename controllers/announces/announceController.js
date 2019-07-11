@@ -31,7 +31,7 @@ Export.logged_user_announces = function (req, res) {
         }).then((announce) => {
 
             if (announce){
-                return res.json(announce);
+                return res.json({success: true,data: announce});
             }
             else {
                 return res.json({success: false, msg: 'Oops! Something went wrong.'});
