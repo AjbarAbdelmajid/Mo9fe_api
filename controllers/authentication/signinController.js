@@ -24,6 +24,7 @@ function check(data, req, res){
 
                 //update last login
                 user.update({
+                    is_connected: true,
                     last_login: Date.now()
                 }).then(()=>{
 

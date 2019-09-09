@@ -198,6 +198,56 @@ Export.get_connected_user_profile = function (req, res) {
 
 };
 
+Export.list_connected_users = function (req, res) {
+    let token = getToken(req.headers);
+
+    if (token){
+        User.findAll({
+            where : {
+                is_connected : true,
+            }
+        }).then((exist)=>{
+            if (exist){
+                return res.json({success: true, data: exist });
+            } else {
+                return res.json({success: false, msg:' not found' })
+            }
+        }).catch((err)=>{
+            throw new Error(err);
+        })
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'})
+    }
+
+
+};
+
+module.exports.signOut = function (req, res) {
+    let token = getToken(req.headers);
+
+    if (token){
+        User.findOne({
+            where : {user_id : req.user.user_id}
+        }).then((user)=>{
+            if (user){
+                user.update({
+                    is_connected: false,
+                    last_login: Date.now(),
+                    where: {user_id: req.user.user_id}
+                }).then(()=>{
+                    res.json({data:user, success: true});
+                })
+            } else{
+                res.json({data:user, success: false});
+            }
+        }).catch(err => {throw new Error(err)})
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'})
+    }
+
+};
+
+
 
 function deleteAccount(req, res, user_id ){
 

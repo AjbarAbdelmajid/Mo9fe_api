@@ -30,6 +30,8 @@ router.patch('/update/me',upload.single('user_image'), usersController.update_us
 
 router.get('/getUserProfile', usersController.get_connected_user_profile);
 
+router.patch('/signOut', usersController.signOut);
+
 
 
 module.exports = router;

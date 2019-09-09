@@ -22,6 +22,10 @@ module.exports = (connexion, DataType)=>{
             type: DataType.BOOLEAN,
             defaultValue: false
         },
+        is_connected:{
+            type: DataType.BOOLEAN,
+            defaultValue: false
+        },
         last_login:{
             type: DataType.DATE,
         }
